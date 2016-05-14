@@ -46,7 +46,6 @@ public class AddExpensePanel extends JPanel{
 		JPanel jPanel = new JPanel();
 		//Add label:  expense and  new expense
 		jPanel.setLayout(new GridBagLayout());
-
 		// Init bag
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -73,7 +72,7 @@ public class AddExpensePanel extends JPanel{
 				+" value: "+jtfValue.getText()+" type:"+jComboboxType.getSelectedItem());
 				try {
 					Expense expense = new Expense(jtfName.getText(),
-							Float.parseFloat(jtfValue.getText()),
+							Double.parseDouble(jtfValue.getText()),
 							jtfDate.getText(), 
 							ExpenseType.fromString(jComboboxType.getSelectedItem().toString()));
 					
@@ -83,12 +82,17 @@ public class AddExpensePanel extends JPanel{
 					jtfDate.setText("");
 					jComboboxType.setSelectedIndex(0);
 					JOptionPane.showMessageDialog(jPanel, "The expense has been added.");
-					if(managerInterface.isExpenseOverLimit(expense)){
-						JOptionPane.showMessageDialog(jPanel, "Budget overrun!");
+					if(managerInterface.isExpenseOverLimit(expense, Collector.MONTH_LIMIT)){
+						JOptionPane.showMessageDialog(jPanel, "Monthly budget overrun!");
+						LOGGER.warning("Monthly budget overrun after adding expense");
 					}
+					if(managerInterface.isExpenseOverLimit(expense, Collector.YEAR_LIMIT)){
+						JOptionPane.showMessageDialog(jPanel, "Yearly budget overrun!");
+						LOGGER.warning("Yearly budget overrun after adding expense");
+					}					
 				} catch (IllegalArgumentException e1) {
-					e1.printStackTrace();
-					LOGGER.warning("Failed adding expense " + e1.getMessage()+" line:");
+					
+					LOGGER.warning("Failed adding expense " + e1.getMessage());
 					JOptionPane.showMessageDialog(jPanel, e1.getMessage());
 				}
 			}

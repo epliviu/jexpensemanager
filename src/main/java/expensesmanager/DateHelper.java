@@ -1,10 +1,13 @@
 package expensesmanager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.Weeks;
 
@@ -68,5 +71,66 @@ public class DateHelper implements Serializable{
         if(date==null) return null;
         DateTime dt = new DateTime(date);
         return dt.toLocalDate();
+    }
+	/**
+	 * Get recurrence years
+	 * @param recurrenceDate end
+	 * @param Date end
+	 * @return ListDate
+	 */
+	public List<Date> reccurenceYearsDate(Date recurrenceDate, Date end) {
+		List<Date> dates = new ArrayList<Date>();
+		LocalDate localRecurrenceDate = convertUtilDateToLocalDate(recurrenceDate);
+		LocalDate localEnd = convertUtilDateToLocalDate(end);
+		for (LocalDate localDate = localRecurrenceDate; localRecurrenceDate.isBefore(localEnd); localDate = localDate.plusYears(1))		{
+			dates.add(localDate.toDate());
+		}
+		return dates;
+    }
+	/**
+	 * Get recurrence months
+	 * @param recurrenceDate end
+	 * @param Date end
+	 * @return ListDate
+	 */
+	public List<Date> reccurenceMonths(Date recurrenceDate, Date end) {
+		List<Date> dates = new ArrayList<Date>();
+		LocalDate localRecurrenceDate = convertUtilDateToLocalDate(recurrenceDate);
+		LocalDate localEnd = convertUtilDateToLocalDate(end);
+		for (LocalDate localDate = localRecurrenceDate; localRecurrenceDate.isBefore(localEnd); localDate = localDate.plusMonths(1))		{
+			dates.add(localDate.toDate());
+		}
+		return dates;
+    }
+	/**
+	 * Get recurrence weeks
+	 * @param recurrenceDate end
+	 * @param Date end
+	 * @return ListDate
+	 */
+	public List<Date> reccurenceWeeks(Date recurrenceDate, Date end) {
+		List<Date> dates = new ArrayList<Date>();
+		LocalDate localRecurrenceDate = convertUtilDateToLocalDate(recurrenceDate);
+		LocalDate localEnd = convertUtilDateToLocalDate(end);
+		for (LocalDate localDate = localRecurrenceDate; localRecurrenceDate.isBefore(localEnd); localDate = localDate.plusWeeks(1))		{
+			dates.add(localDate.toDate());
+		}
+		return dates;
+    }
+
+	/**
+	 * Get recurrence Days
+	 * @param recurrenceDate end
+	 * @param Date end
+	 * @return ListDate
+	 */
+	public List<Date> reccurenceDays(Date recurrenceDate, Date end) {
+		List<Date> dates = new ArrayList<Date>();
+		LocalDate localRecurrenceDate = convertUtilDateToLocalDate(recurrenceDate);
+		LocalDate localEnd = convertUtilDateToLocalDate(end);
+		for (LocalDate localDate = localRecurrenceDate; localRecurrenceDate.isBefore(localEnd); localDate = localDate.plusDays(1))		{
+			dates.add(localDate.toDate());
+		}
+		return dates;
     }
 }

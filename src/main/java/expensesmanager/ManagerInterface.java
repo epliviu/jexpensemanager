@@ -42,12 +42,13 @@ public interface ManagerInterface {
 	 * @return double
 	 */
 	double getExpensesLimit(String type);
+	
 	/**
-	 * Check if an expense is over limit
+	 * Check if an expense is over limit into a month
 	 * @param expense
 	 * @return boolean
 	 */
-	boolean isExpenseOverLimit(Expense expense);
+	boolean isExpenseOverLimit(Expense expense, String LimitKey);
 	/**
 	 * Get expense forecast for one year
 	 * @param year
@@ -55,4 +56,10 @@ public interface ManagerInterface {
 	 * @return double
 	 */
 	double getForecastExpenses(String year, int addPercent);
+	/**
+	 * Get expenses values
+	 * @param dateInput dd-mm-yyyy
+	 * @return double
+	 */
+	double getExpensesTotalValue(String dateInput);
 }

@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 
 /**
  * @author nicolicioiul
@@ -22,8 +23,14 @@ public class Expense  implements Serializable{
 	private ExpenseType type;
 	private double value;
 	private Date date;
-	// Date helper
+	/**
+	 *  Date helper
+	 */
 	private DateHelper dateHelper;
+	/**
+	 * logger for this class
+	 */
+	public static final Logger LOGGER = Logger.getGlobal();
 	public String getName() {
 		return name;
 	}
@@ -68,7 +75,7 @@ public class Expense  implements Serializable{
 	 * @param date
 	 * @param type
 	 */
-	public Expense(String name, Float value, String Inputdate, ExpenseType type) throws IllegalArgumentException{
+	public Expense(String name, double value, String Inputdate, ExpenseType type) throws IllegalArgumentException{
 		super();
 		if(value <= 0){
 			throw new IllegalArgumentException("Invalid value.");
@@ -77,6 +84,7 @@ public class Expense  implements Serializable{
 			DateFormat df = new SimpleDateFormat("dd-mm-yyyy");
 			date = df.parse(Inputdate);
 		} catch (ParseException e) {
+			LOGGER.info("Fail add new expense, invalid date format.");
 			throw new IllegalArgumentException("Invalid date, expected format: dd-mm-yyyy.");
 		}
 		this.dateHelper = DateHelper.getInstance();
@@ -100,26 +108,29 @@ public class Expense  implements Serializable{
 		if(type.equals(ExpenseType.DAILY)){
 			// Days between intervals
 			int days = dateHelper.getDaysInterval(beginDate, endDate);
-			System.out.println("Days from :"+beginDate+" to:"+ endDate + " - " + days);
+			LOGGER.info("Days between interval:"+beginDate+" and "+endDate +": " + days);
 			if(days > 0){
 				return days * getValue();
 			}
 		}else if(type.equals(ExpenseType.MONTHLY)){	
 			int months = dateHelper.getMonthsInterval(beginDate, endDate);
-			System.out.println("Months from :"+beginDate+" to:"+ endDate + " - " + months);
+			LOGGER.info("Months between interval:"+beginDate+" and "+endDate +": " + months);
 	        if(months > 0){
 	        	return months * getValue(); 
 	        }
 		}else if(type.equals(ExpenseType.WEEKLY)){
 			int weeks = dateHelper.getWeeksInterval(beginDate, endDate);
-			System.out.println("Weeks from :"+beginDate+" to:"+ endDate + " - " + weeks);
+			LOGGER.info("Weeks between interval:"+beginDate+" and "+endDate +": " + weeks);
 	        if(weeks > 0){
 	        	return weeks * value; 
 	        }
 		}else if(type.equals(ExpenseType.ONEOFF)){
 			// Is between dates
 			if(beginDate.compareTo(getDate()) * getDate().compareTo(endDate) > 0){
+				LOGGER.info("Expense is between interval:"+beginDate+" and "+endDate+ ":" + getDate());
 				return getValue();
+			}else{
+				LOGGER.info("Expense is NOT between interval:"+beginDate+" and "+endDate+ ":" + getDate());
 			}
 		}
 		return 0f;
